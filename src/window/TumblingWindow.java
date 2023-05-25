@@ -30,6 +30,6 @@ public class TumblingWindow {
                     public Tuple2<String, Long> reduce(Tuple2<String, Long> t1, Tuple2<String, Long> t2) throws Exception {
                         return new Tuple2<>(t1.f0+t2.f0, t1.f1);
                     }
-                })
+                });
     }
 }
