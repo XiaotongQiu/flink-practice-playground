@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UvStatistics {
-    private static final String path="/Users/qcat/xiaotong_dev/java/flink-practice/src/resources/UserBehavior.csv";
+    private static final String path="resources/UserBehavior.csv";
     public static void main(String[] args) throws Exception{
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

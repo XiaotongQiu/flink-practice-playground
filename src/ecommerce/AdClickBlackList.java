@@ -22,7 +22,7 @@ import javax.xml.crypto.Data;
 
 public class AdClickBlackList {
 
-    private static final String path = "/Users/qcat/xiaotong_dev/java/flink-practice/src/resources/AdClickLog.csv";
+    private static final String path = "resources/AdClickLog.csv";
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);

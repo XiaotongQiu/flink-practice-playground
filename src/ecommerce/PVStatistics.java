@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExt
 import org.apache.flink.streaming.api.windowing.time.Time;
 
 public class PVStatistics {
-    private static final String path = "/Users/qcat/xiaotong_dev/java/flink-practice/src/resources/UserBehavior.csv";
+    private static final String path = "resources/UserBehavior.csv";
     public static void main(String[] args) throws Exception{
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
