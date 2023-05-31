@@ -3,14 +3,17 @@ package ecommerce.model;
 public class OrderEvent {
     private String orderId;
     private String eventType;
+
+    private String txId;
     private Long eventTime;
 
     public OrderEvent() {
     }
 
-    public OrderEvent(String orderId, String eventType, Long eventTime) {
+    public OrderEvent(String orderId, String eventType, String txId, Long eventTime) {
         this.orderId = orderId;
         this.eventType = eventType;
+        this.txId = txId;
         this.eventTime = eventTime;
     }
 
@@ -19,12 +22,21 @@ public class OrderEvent {
         return "OrderEvent{" +
                 "orderId='" + orderId + '\'' +
                 ", eventType='" + eventType + '\'' +
+                ", txId='" + txId + '\'' +
                 ", eventTime=" + eventTime +
                 '}';
     }
 
     public String getOrderId() {
         return orderId;
+    }
+
+    public String getTxId() {
+        return txId;
+    }
+
+    public void setTxId(String txId) {
+        this.txId = txId;
     }
 
     public void setOrderId(String orderId) {

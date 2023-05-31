@@ -33,7 +33,7 @@ public class OrderTimeout {
                     public OrderEvent map(String s) throws Exception {
                         String[] data = s.split(",");
 
-                        return new OrderEvent(data[0], data[1], Long.parseLong(data[3])*1000);
+                        return new OrderEvent(data[0], data[1],data[2], Long.parseLong(data[3])*1000);
                     }
                 })
                         .assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<OrderEvent>(Time.seconds(1)) {
