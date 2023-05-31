@@ -5,6 +5,7 @@ import ecommerce.model.UserBahavior;
 import ecommerce.source.SimulatedEventSource;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -14,7 +15,6 @@ import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import scala.Tuple2;
 
 import java.text.SimpleDateFormat;
 
@@ -41,7 +41,7 @@ public class AppMarketingStatistics {
                                 return new Tuple2<>("key", 1L);
                             }
                         })
-                                .keyBy(r -> r._1)
+                                .keyBy(r -> r.f0)
                                         .timeWindow(Time.seconds(5), Time.seconds(1))
                                                 .process(new CountTotal()).print();
 
@@ -74,8 +74,8 @@ public class AppMarketingStatistics {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
             res.append("window end at ").append(simpleDateFormat.format(context.window().getEnd()))
-                    .append(" channel: ").append(stringStringTuple2._1)
-                    .append(" action: ").append(stringStringTuple2._2)
+                    .append(" channel: ").append(stringStringTuple2.f0)
+                    .append(" action: ").append(stringStringTuple2.f1)
                     .append(" n count is: ").append(Iterables.size(iterable));
 
             collector.collect(res.toString());
