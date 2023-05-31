@@ -6,6 +6,7 @@ import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -34,6 +35,7 @@ public class HotItem {
 
         DataStream<String> input = env.readTextFile(path);
 
+
         DataStream<ItemViewCount> output = input.map(new MapFunction<String, UserBahavior>() {
             @Override
             public UserBahavior map(String s) throws Exception {
@@ -51,12 +53,40 @@ public class HotItem {
                 .filter(u -> u.getBehaviour().equals("pv"))
                 .keyBy((KeySelector<UserBahavior, String>) userBahavior -> userBahavior.getItemId())
                 .timeWindow(Time.hours(1), Time.minutes(5))
-                .aggregate(new CountAgg(), new WindowResult());
+//                .aggregate(new CountAgg(), new WindowResult());
+                .process(new ProcessWindowFunction<UserBahavior, ItemViewCount, String, TimeWindow>() {
+                    @Override
+                    public void process(String s, ProcessWindowFunction<UserBahavior, ItemViewCount, String, TimeWindow>.Context context, Iterable<UserBahavior> iterable, Collector<ItemViewCount> collector) throws Exception {
+                        collector.collect(new ItemViewCount(s, context.window().getEnd(), (long) Iterables.size(iterable)));
+                    }
+                });
+
+//        output.print();
+
+        input.map(new MapFunction<String, UserBahavior>() {
+                    @Override
+                    public UserBahavior map(String s) throws Exception {
+                        String[] data = s.split(",");
+
+                        return new UserBahavior(data[0], data[1], data[2], data[3], Long.parseLong(data[4])*1000);
+                    }
+                })
+                .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<UserBahavior>() { // use ascending ts for example only
+                    @Override
+                    public long extractAscendingTimestamp(UserBahavior userBahavior) {
+                        return userBahavior.getTimestamp();
+                    }
+                })
+                .filter(u -> u.getBehaviour().equals("pv"))
+                .keyBy((KeySelector<UserBahavior, String>) userBahavior -> userBahavior.getItemId())
+                .timeWindow(Time.hours(1), Time.minutes(5))
+                .aggregate(new CountAgg(), new WindowResult())
+                .keyBy(i -> i.getWindowEnd())
+                .process(new TopHotItems(5)).print();
 
         DataStream<String> topItems = output.keyBy(i -> i.getWindowEnd())
                         .process(new TopHotItems(3));
 
-//        output.print()
 
         topItems.print();
 
