@@ -1,4 +1,4 @@
-package userAction;
+package ecommerce;
 
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -15,9 +15,8 @@ import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import userAction.model.ItemViewCount;
-import userAction.model.UserBahavior;
-import window.function.AggregationFunction;
+import ecommerce.model.ItemViewCount;
+import ecommerce.model.UserBahavior;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

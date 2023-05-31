@@ -1,4 +1,4 @@
-package userAction.model;
+package ecommerce.model;
 
 public class UserBahavior {
     private String userId;
